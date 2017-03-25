@@ -91,15 +91,20 @@ abstract class Application
 
     public function run()
     {
-        $params = $this->router->resolve($this->request->getPathInfo());
-        if (!$params) {
-            // [todo-A]
+        try {
+            $params = $this->router->resolve($this->request->getPathInfo());
+            if (!$params) {
+                throw new HttpNotFoundException('No route found for ' . $this->request->getPathInfo());
+            }
+
+            $controller = $params['controller'];
+            $action = $params['action'];
+
+            $this->runAction($controller, $action, $params);
+
+        } catch (HttpNotFoundException $e) {
+            $this->render404Page($e);
         }
-
-        $controller = $params['controller'];
-        $action = $params['action'];
-
-        $this->runAction($controller, $action, $params);
 
         $this->response->send();
     }
@@ -110,7 +115,7 @@ abstract class Application
 
         $controller = $this->findController($controller_class);
         if (!$controller) {
-            // [todo-B]
+            throw new HttpNotFoundException($controller_class . ' controller is not found.');
         }
 
         $content = $controller->run($action, $params);
@@ -134,6 +139,27 @@ abstract class Application
         }
 
         return new $controller_class($this);
+    }
+
+    protected function render404Page($e)
+    {
+        $this->response->setStatusCode(404, 'Not Found');
+        $message = $this->isDebugMode() ? $e->getMessage() : 'Page not found.';
+        $message = htmlspecialchars($message, ENT_QUOTES, 'UTF-8');
+
+        $this->response->setContent(<<<EOF
+        <!doctype html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <title>404</title>
+         </head>
+         <body>
+          {$message}
+         </body>
+         </html>
+        EOF
+        );
     }
 
 }
