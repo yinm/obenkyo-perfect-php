@@ -152,17 +152,17 @@ abstract class Application
         $message = htmlspecialchars($message, ENT_QUOTES, 'UTF-8');
 
         $this->response->setContent(<<<EOF
-        <!doctype html>
-        <html>
-        <head>
-          <meta charset="utf-8">
-          <title>404</title>
-         </head>
-         <body>
-          {$message}
-         </body>
-         </html>
-        EOF
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>404</title>
+ </head>
+ <body>
+  {$message}
+ </body>
+ </html>
+EOF
         );
     }
 
