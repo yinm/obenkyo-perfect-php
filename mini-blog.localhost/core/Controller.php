@@ -18,7 +18,7 @@ abstract class Controller
         $this->application = $application;
         $this->request     = $application->getRequest();
         $this->response    = $application->getResponse();
-        $this->session     = $application->getSessioon();
+        $this->session     = $application->getSession();
         $this->db_manager  = $application->getDbManager();
     }
 
@@ -31,11 +31,11 @@ abstract class Controller
             $this->forward404();
         }
 
-        if ($this->needsAuthentication($aciton) && !$this->session->isAuthenticated()) {
+        if ($this->needsAuthentication($action) && !$this->session->isAuthenticated()) {
             throw new UnauthorizedActionException();
         }
 
-        $content = $this->action_method($params);
+        $content = $this->$action_method($params);
         return $content;
     }
 
