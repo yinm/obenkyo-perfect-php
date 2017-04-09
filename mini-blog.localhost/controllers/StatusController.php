@@ -14,4 +14,51 @@ class StatusController extends Controller
             '_token'   => $this->generateCsrfToken('status/post'),
         ));
     }
+
+    public function postAction()
+    {
+        // HTTPメソッドのチェック
+        if (!$this->request->isPost()) {
+            $this->forward404();
+        }
+
+        // CSRFトークンのチェック
+        $token = $this->request->getPost('_token');
+        if (!$this->checkCsrfToken('status/post', $token)) {
+            return $this->redirect('/');
+        }
+
+        // 入力情報のバリデーション
+        $body = $this->request->getPost('body');
+
+        $errors = array();
+
+        if (!strlen($body)) {
+            $errors[] = 'ひとことを入力してください';
+        } elseif (mb_strlen($body) > 200) {
+            $errors[] = 'ひとこと200文字以内で入力してください';
+        }
+
+        if (count($errors === 0)) {
+            // レコードの登録
+            $user = $this->session->get('user');
+            $this->db_manager->get('Status')->insert($user['id'], $body);
+
+            // ホームページへリダイレクト
+            return $this->redirect('/');
+        }
+
+        // エラー画面
+        // 入力画面は投稿一覧を表示しているため、一覧を再取得
+        $user = $this->session->get('user');
+        $statuses = $this->db_manager->get('Status')
+            ->fetchAllPersonalArchivesByUserId($user['id']);
+
+        return  $this->render(array(
+            'errors'   => $errors,
+            'body'     => $body,
+            'statuses' => $statuses,
+            '_token'   => $this->generateCsrfToken('status/post'),
+        ), 'index');
+    }
 }

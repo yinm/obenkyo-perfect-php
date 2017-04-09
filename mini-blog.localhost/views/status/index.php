@@ -17,6 +17,6 @@
 
 <div id="statuses">
     <?php foreach ($statuses as $status): ?>
-        <?php echo $this->escape($status['created_at']); ?>
+        <?php echo $this->render('status/status', array('status' => $status)); ?>
     <?php endforeach; ?>
 </div>
