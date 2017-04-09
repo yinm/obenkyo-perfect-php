@@ -1,6 +1,6 @@
 <?php
 
-class UserRespository extends DbRepository
+class UserRepository extends DbRepository
 {
     public function insert($user_name, $password)
     {
