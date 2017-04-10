@@ -65,4 +65,10 @@ class AccountController extends Controller
             '_token'    => $this->generateCsrfToken('account/signup'),
         ), 'signup');
     }
+
+    public function indexAction()
+    {
+        $user = $this->session->get('user');
+        return $this->render(array('user' => $user));
+    }
 }
