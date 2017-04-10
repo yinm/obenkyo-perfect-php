@@ -2,6 +2,8 @@
 
 class AccountController extends Controller
 {
+    protected $auth_actions = array('index', 'signout');
+
     public function signupAction()
     {
         if ($this->session->isAuthenticated()) {
