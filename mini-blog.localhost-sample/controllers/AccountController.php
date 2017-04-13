@@ -19,14 +19,14 @@ class AccountController extends Controller
         if (!$this->checkCsrfToken('account/signup', $token)) {
             return $this->redirect('/account/signup');
         }
-        $user_name = $this->request->getPost('uesr_name');
+        $user_name = $this->request->getPost('user_name');
         $password = $this->request->getPost('password');
 
         $errors = array();
 
         if (!strlen($user_name)) {
             $errors[] = 'ユーザIDを入力してください';
-        } elseif (!preg_match('/^\w{3, 20}$/', $user_name)) {
+        } elseif (!preg_match('/^\w{3,20}$/', $user_name)) {
             $errors[] = 'ユーザIDは半角英数字およびアンダースコアを3 ~ 20文字以内で入力してください';
         } elseif (!$this->db_manager->get('User')->isUniqueUserName($user_name)) {
             $errors[] = 'ユーザIDは既に使用されています';
