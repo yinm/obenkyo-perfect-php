@@ -14,7 +14,7 @@ class StatusRepository extends DbRepository
         $stmt = $this->execute($sql, array(
             ':user_id'    => $user_id,
             ':body'       => $body,
-            ':created_at' => $now->format('Y-m-D H:i:s'),
+            ':created_at' => $now->format('Y-m-d H:i:s'),
         ));
     }
 
