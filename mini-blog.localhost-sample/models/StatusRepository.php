@@ -4,7 +4,7 @@ class StatusRepository extends DbRepository
 {
     public function insert($user_id, $body)
     {
-        $now = nwe DateTime();
+        $now = new DateTime();
 
         $sql = '
             INSERT INTO status(user_id, body, created_at)
@@ -18,7 +18,7 @@ class StatusRepository extends DbRepository
         ));
     }
 
-    public function fetchAllPersonalArchiesByUserId($user_id)
+    public function fetchAllPersonalArchivesByUserId($user_id)
     {
         $sql = '
             SELECT a.*, u.user_name
