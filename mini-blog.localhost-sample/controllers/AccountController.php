@@ -135,4 +135,12 @@ class AccountController extends Controller
             '_token'    => $this->generateCsrfToken('account/signin'),
         ), 'signin');
     }
+
+    public function signoutAction()
+    {
+        $this->session->clear();
+        $this->session->setAuthenticated(false);
+
+        return $this->redirect('/account/signin');
+    }
 }
