@@ -8,10 +8,10 @@
  */
 function basic_auth($auth_list, $realm="Restricted Area", $failed_text="認証に失敗しました")
 {
-    if (isset($_SERVER['PHP_AUTH_USER']) and isset($auth_list[$_SERVER['PHP_AUTH_USER']])) {
-        if ($_SERVER['PHP_AUTH_PW'] === $auth_list[$_SERVER['PHP_AUTH_USER']]) {
+    if (isset($_SERVER['PHP_AUTH_USER'])
+        && isset($auth_list[$_SERVER['PHP_AUTH_USER']])
+        && $_SERVER['PHP_AUTH_PW'] === $auth_list[$_SERVER['PHP_AUTH_USER']]) {
             return $_SERVER['PHP_AUTH_USER'];
-        }
     }
 
     header('WWW-Authenticate: Basic realm="' . $realm . '"');
