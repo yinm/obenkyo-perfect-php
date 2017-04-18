@@ -1,16 +1,16 @@
 <?php
 
 /**
- * @param array $auth_list
+ * @param array $authList
  * @param string $realm
- * @param string $failed_text
+ * @param string $failedText
  * @return string | void
  */
-function basic_auth($auth_list, $realm="Restricted Area", $failed_text="認証に失敗しました")
+function basicAuth($authList, $realm="Restricted Area", $failedText="認証に失敗しました")
 {
     if (isset($_SERVER['PHP_AUTH_USER'])
-        && isset($auth_list[$_SERVER['PHP_AUTH_USER']])
-        && $_SERVER['PHP_AUTH_PW'] === $auth_list[$_SERVER['PHP_AUTH_USER']]) {
+        && isset($authList[$_SERVER['PHP_AUTH_USER']])
+        && $_SERVER['PHP_AUTH_PW'] === $authList[$_SERVER['PHP_AUTH_USER']]) {
             return $_SERVER['PHP_AUTH_USER'];
     }
 
@@ -18,9 +18,9 @@ function basic_auth($auth_list, $realm="Restricted Area", $failed_text="認証�
     header('HTTP/1.1 401 Unauthorized');
     header('Content-type: text/html; charset=' . mb_internal_encoding());
 
-    die($failed_text);
+    die($failedText);
 }
 
-basic_auth(array('yinm' => 'password'));
+basicAuth(array('yinm' => 'password'));
 
 echo '認証を通過しました！！！';
