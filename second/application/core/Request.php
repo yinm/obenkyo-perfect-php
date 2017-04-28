@@ -47,8 +47,35 @@ class Request
         }
     }
 
-    public function getRequestUrl()
+    public function getRequestUri()
     {
         return $_SERVER['REQUEST_URI'];
+    }
+
+    public function getBaseUrl()
+    {
+        $scriptName = $_SERVER['SCRIPT_NAME'];
+        $requestUri = $this->getRequestUri();
+
+        if (strpos($requestUri, $scriptName) === 0) {
+            return $scriptName;
+        } else if (strpos($requestUri, dirname($scriptName))) {
+            return rtrim(dirname($scriptName), '/');
+        } else {
+            return '';
+        }
+    }
+
+    public function getPathInfo()
+    {
+        $baseUrl = $this->getBaseUrl();
+        $requestUri = $this->getRequestUri();
+
+        if ($pos = strpos($requestUri, '?')) {
+            $requestUri = substr($requestUri, 0, $pos);
+        }
+
+        $pathInfo = (string)substr($requestUri, strlen($baseUrl));
+        return $pathInfo;
     }
 }
