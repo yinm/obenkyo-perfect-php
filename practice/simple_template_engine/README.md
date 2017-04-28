@@ -1,0 +1,1 @@
+参考： [ob_get_contentsを使用した簡単テンプレート - PHPプロ！](http://www.phppro.jp/phptips/archives/vol51/2)
