@@ -9,6 +9,10 @@ class Router
         $this->routes = $this->compileRoutes($definitions);
     }
 
+    /**
+     * @param array $definitions
+     * @return array
+     */
     public function compileRoutes($definitions)
     {
         $routes = array();
@@ -30,6 +34,10 @@ class Router
         return $routes;
     }
 
+    /**
+     * @param string $pathInfo
+     * @return array|false
+     */
     public function resolve($pathInfo)
     {
         if (substr($pathInfo, 0, 1) !== '/') {

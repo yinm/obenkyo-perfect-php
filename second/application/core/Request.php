@@ -2,6 +2,9 @@
 
 class Request
 {
+    /**
+     * @return bool
+     */
     public function isPost()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -11,6 +14,11 @@ class Request
         }
     }
 
+    /**
+     * @param string $name
+     * @param null|string $default
+     * @return string
+     */
     public function getGet($name, $default = null)
     {
         if (isset($_GET[$name])) {
@@ -20,6 +28,11 @@ class Request
         return $default;
     }
 
+    /**
+     * @param string $name
+     * @param null|string $default
+     * @return string
+     */
     public function getPost($name, $default = null)
     {
         if (isset($_POST[$name])) {
@@ -29,6 +42,9 @@ class Request
         }
     }
 
+    /**
+     * @return string
+     */
     public function getHost()
     {
         if (!empty($_SERVER['HTTP_HOST'])) {
@@ -38,6 +54,9 @@ class Request
         }
     }
 
+    /**
+     * @return bool
+     */
     public function isSsl()
     {
         if (!isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') {
@@ -47,11 +66,17 @@ class Request
         }
     }
 
+    /**
+     * @return string
+     */
     public function getRequestUri()
     {
         return $_SERVER['REQUEST_URI'];
     }
 
+    /**
+     * @return string
+     */
     public function getBaseUrl()
     {
         $scriptName = $_SERVER['SCRIPT_NAME'];
@@ -66,6 +91,9 @@ class Request
         }
     }
 
+    /**
+     * @return string
+     */
     public function getPathInfo()
     {
         $baseUrl = $this->getBaseUrl();

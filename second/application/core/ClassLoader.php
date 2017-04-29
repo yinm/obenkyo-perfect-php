@@ -9,11 +9,17 @@ class ClassLoader
         spl_autoload_register(array($this, 'loadClass'));
     }
 
+    /**
+     * @param string $dir
+     */
     public function registerDir($dir)
     {
         $this->dirs[] = $dir;
     }
 
+    /**
+     * @param string $class
+     */
     public function loadClass($class)
     {
         foreach ($this->dirs as $dir) {
