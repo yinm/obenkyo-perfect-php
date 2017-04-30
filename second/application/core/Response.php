@@ -18,17 +18,28 @@ class Response
         echo $this->content;
     }
 
+    /**
+     * @param string $content
+     */
     public function setContent($content)
     {
         $this->content = $content;
     }
 
+    /**
+     * @param string $statusCode
+     * @param string $statusText
+     */
     public function setStatusCode($statusCode, $statusText = '')
     {
         $this->statusCode = $statusCode;
         $this->statusText = $statusText;
     }
 
+    /**
+     * @param string $name
+     * @param string $value
+     */
     public function setHttpHeader($name, $value)
     {
         $this->httpHeaders[$name] = $value;
