@@ -4,6 +4,7 @@ class DbManager
 {
     protected $connections = array();
     protected $repositoryConnectionMap = array();
+    protected $repositories = array();
 
     /**
      * @param string $name
@@ -65,5 +66,22 @@ class DbManager
         }
 
         return $con;
+    }
+
+    /**
+     * @param string $repositoryName
+     * @return PDO
+     */
+    public function get($repositoryName)
+    {
+        if (!isset($this->repositories[$repositoryName])) {
+            $repositoryClass = $repositoryName . 'Repository';
+            $con = $this->getConnectionForRepository($repositoryName);
+
+            $repository = new $repositoryClass($con);
+            $this->repositories[$repositoryName] = $repository;
+        }
+
+        return $this->repositories[$repositoryName];
     }
 }
