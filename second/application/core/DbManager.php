@@ -84,4 +84,15 @@ class DbManager
 
         return $this->repositories[$repositoryName];
     }
+
+    public function __destruct()
+    {
+        foreach ($this->repositories as $repository) {
+            unset($repository);
+        }
+
+        foreach ($this->connections as $con) {
+            unset($con);
+        }
+    }
 }
