@@ -3,6 +3,7 @@
 class DbManager
 {
     protected $connections = array();
+    protected $repositoryConnectionMap = array();
 
     /**
      * @param string $name
@@ -39,5 +40,30 @@ class DbManager
         }
 
         return $this->connections[$name];
+    }
+
+    /**
+     * @param string $repositoryName
+     * @param string $name
+     */
+    public function setRepositoryConnectionMap($repositoryName, $name)
+    {
+        $this->repositoryConnectionMap[$repositoryName] = $name;
+    }
+
+    /**
+     * @param string $repositoryName
+     * @return PDO
+     */
+    public function getConnectionForRepository($repositoryName)
+    {
+        if (isset($this->repositoryConnectionMap[$repositoryName])) {
+            $name = $this->repositoryConnectionMap[$repositoryName];
+            $con  = $this->getConnection($name);
+        } else {
+            $con  = $this->getConnection();
+        }
+
+        return $con;
     }
 }
