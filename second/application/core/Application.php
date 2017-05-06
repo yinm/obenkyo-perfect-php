@@ -116,14 +116,18 @@ abstract class Application
 
     public function run()
     {
-        $params = $this->router->resolve($this->request->getPathInfo());
-        if ($params === false) {
-            // [todo]
-        }
+        try {
+            $params = $this->router->resolve($this->request->getPathInfo());
+            if ($params === false) {
+                throw new HttpNotFoundException('No route found for ' . $this->request->getPathInfo());
+            }
 
-        $controller = $params['controller'];
-        $action = $params['action'];
-        $this->runAction($controller, $action, $params);
+            $controller = $params['controller'];
+            $action = $params['action'];
+            $this->runAction($controller, $action, $params);
+        } catch (HttpNotFoundException $e) {
+            $this->render404Page($e);
+        }
 
         $this->response->send();
     }
@@ -132,6 +136,7 @@ abstract class Application
      * @param string $controllerName
      * @param string $action
      * @param array $params
+     * @throws Exception not found controller
      */
     public function runAction($controllerName, $action, $params = array())
     {
@@ -139,7 +144,7 @@ abstract class Application
 
         $controller = $this->findController($controllerClass);
         if ($controller === false) {
-            // [todo]
+            throw new HttpNotFoundException($controllerClass . ' controller is not found.');
         }
 
         $content = $controller->run($action, $params);
@@ -170,4 +175,27 @@ abstract class Application
         return new $controllerClass($this);
     }
 
+    /**
+     * @param error $e
+     */
+    protected function render404Page($e)
+    {
+        $this->response->setStatusCode(404, 'Not Found');
+        $message = $this->isDebugMode() ? $e->getMessage() : 'Page not found.';
+        $message = htmlspecialchars($message, ENT_QUOTES, 'UTF-8');
+
+        $this->response->setContent(<<<EOF
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>404</title>
+</head>
+<body>
+  {$message}
+</body>
+</html>
+EOF
+        );
+    }
 }
