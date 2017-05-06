@@ -113,4 +113,61 @@ abstract class Application
     {
         return $this->getRootDir() . '/models';
     }
+
+    public function run()
+    {
+        $params = $this->router->resolve($this->request->getPathInfo());
+        if ($params === false) {
+            // [todo]
+        }
+
+        $controller = $params['controller'];
+        $action = $params['action'];
+        $this->runAction($controller, $action, $params);
+
+        $this->response->send();
+    }
+
+    /**
+     * @param string $controllerName
+     * @param string $action
+     * @param array $params
+     */
+    public function runAction($controllerName, $action, $params = array())
+    {
+        $controllerClass = ucfirst($controllerName) . 'Controller';
+
+        $controller = $this->findController($controllerClass);
+        if ($controller === false) {
+            // [todo]
+        }
+
+        $content = $controller->run($action, $params);
+
+        $this->response->setContent($content);
+    }
+
+    /**
+     * @param string $controllerClass
+     * @return class|false
+     */
+    protected function findController($controllerClass)
+    {
+        if(!class_exists($controllerClass)) {
+            $controllerFile = $this->getControllerDir() . '/' . $controllerClass . '.php';
+
+            if (!is_readable($controllerFile)) {
+                return false;
+            } else {
+                require_once $controllerFile;
+
+                if (!class_exists($controllerClass)) {
+                    return false;
+                }
+            }
+        }
+
+        return new $controllerClass($this);
+    }
+
 }
