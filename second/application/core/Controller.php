@@ -20,4 +20,22 @@ abstract class Controller
         $this->session     = $application->getSession();
         $this->dbManager   = $application->getDbManager();
     }
+
+    /**
+     * @param string $action
+     * @param array $params
+     * @return mixed
+     */
+    public function run($action, $params = array())
+    {
+        $this->actionName = $action;
+
+        $actionMethod = $action . 'Action';
+        if (!method_exists($this, $actionMethod)) {
+            $this->forward404();
+        }
+
+        $content = $this->actionMethod($params);
+        return $content;
+    }
 }
