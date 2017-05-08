@@ -10,6 +10,10 @@ abstract class Controller
     protected $session;
     protected $dbManager;
 
+    /**
+     * Controller constructor.
+     * @param class $application
+     */
     public function __construct($application)
     {
         $this->controllerName = strtolower(substr(get_class($this), 0, -10));
