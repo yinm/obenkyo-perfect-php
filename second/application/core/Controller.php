@@ -42,4 +42,29 @@ abstract class Controller
         $content = $this->actionMethod($params);
         return $content;
     }
+
+    /**
+     * @param array $variables
+     * @param string $template
+     * @param string $layout
+     * @return string
+     */
+    protected function render($variables = array(), $template = null, $layout = 'layout')
+    {
+        $defaults = array(
+            'request'  => $this->request,
+            'base_url' => $this->request->getBaseUrl(),
+            'session'  => $this->session,
+        );
+
+        $view = new View($this->application->getViewDir(), $defaults);
+
+        if (is_null($template)) {
+            $template = $this->actionName;
+        }
+
+        $path = $this->controllerName . '/' . $template;
+
+        return $view->render($path, $variables, $layout);
+    }
 }
