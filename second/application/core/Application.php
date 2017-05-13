@@ -7,6 +7,7 @@ abstract class Application
     protected $response;
     protected $session;
     protected $dbManager;
+    protected $loginAction = array();
 
     /**
      * @param bool $debug
@@ -125,8 +126,13 @@ abstract class Application
             $controller = $params['controller'];
             $action = $params['action'];
             $this->runAction($controller, $action, $params);
+
         } catch (HttpNotFoundException $e) {
             $this->render404Page($e);
+
+        } catch (UnauthorizedActionException $e) {
+            list($controller, $action) = $this->loginAction;
+            $this->runAction($controller, $action);
         }
 
         $this->response->send();

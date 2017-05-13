@@ -9,6 +9,7 @@ abstract class Controller
     protected $response;
     protected $session;
     protected $dbManager;
+    protected $authActions = array();
 
     /**
      * Controller constructor.
@@ -37,6 +38,10 @@ abstract class Controller
         $actionMethod = $action . 'Action';
         if (!method_exists($this, $actionMethod)) {
             $this->forward404();
+        }
+
+        if ($this->needsAuthentication($action) && !$this->session->isAuthenticated()) {
+            throw new UnauthorizedActionException();
         }
 
         $content = $this->actionMethod($params);
@@ -123,6 +128,22 @@ abstract class Controller
             unset($tokens[$pos]);
             $this->session->set($key, $tokens);
 
+            return true;
+
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * @param string $action
+     * @return bool
+     */
+    protected function needsAuthentication($action)
+    {
+        if ($this->authActions === true
+            || (is_array($this->authActions) && in_array($action, $this->authActions))
+        ) {
             return true;
 
         } else {
